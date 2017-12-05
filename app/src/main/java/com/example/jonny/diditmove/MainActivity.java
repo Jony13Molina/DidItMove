@@ -1,5 +1,6 @@
 package com.example.jonny.diditmove;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -175,6 +176,7 @@ public class MainActivity extends Activity implements
      * It is used to display the integer on the screen.
      */
     private class UiCallback implements Handler.Callback {
+        @SuppressLint("SetTextI18n")
         @Override
         public boolean handleMessage(Message message) {
             if (message.what == DISPLAY_NUMBER) {
@@ -184,8 +186,14 @@ public class MainActivity extends Activity implements
                 if (result != null) {
                     Log.i(LOG_TAG, "Displaying: " + result.intValue);
                     TextView tv = (TextView) findViewById(R.id.number_view);
-                    tv.setText(Integer.toString(result.intValue));
-                    // Tell the worker that the bitmap is ready to be reused
+                    tv.setText(Boolean.toString(result.intValue));
+                 if(myService.didItMove())
+                    {
+                        tv.setText("Phone Was Moved");
+                    }
+                    else{
+                        tv.setText("Phone Did Not Moved");
+                    }
                     if (serviceBound && myService != null) {
                         Log.i(LOG_TAG, "Releasing result holder for " + result.intValue);
                         myService.releaseResult(result);

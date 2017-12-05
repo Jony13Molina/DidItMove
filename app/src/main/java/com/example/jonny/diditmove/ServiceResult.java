@@ -11,5 +11,5 @@ public class ServiceResult
         {
         }
 
-        public int intValue;
+        public boolean intValue;
 }

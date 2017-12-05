@@ -36,9 +36,9 @@ public class MyService extends Service {
     private Notification notification;
 
     private boolean timeRecorded;
-    private Date T0;
-    private Date firstAccel;
-    private Date T1;
+    public  Date T0;
+    public Date firstAccel;
+    public Date T1;
     // Binder given to clients
     private final IBinder myBinder = new MyBinder();
 
@@ -51,6 +51,7 @@ public class MyService extends Service {
     }
 
     public MyService() {
+
     }
 
     @Override
@@ -60,7 +61,7 @@ public class MyService extends Service {
 
         // Display a notification about us starting.  We put an icon in the status bar.
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        showMyNotification(this);
+        //showMyNotification(this);
 
         // Creates the thread running the camera service.
         myTask = new MyServiceTask(getApplicationContext());
@@ -72,7 +73,7 @@ public class MyService extends Service {
                 new SensorEventListener() {
                     @Override
                     public void onSensorChanged(SensorEvent event) {
-                        //Check for any x-y movement that isn't just noise.
+                        //check the x and y movement
                         if((event.values[0] < -1 || event.values[0] > 1) || (event.values[1] < -1 || event.values[1] > 1)){
                             T1 = new Date();
                             //If it has been 30 or more seconds since the app was started, note movement
@@ -85,7 +86,8 @@ public class MyService extends Service {
 
                     }
                     @Override
-                    public void onAccuracyChanged(Sensor sensor, int accuracy) {} //ignore
+                    //do nothing here
+                    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
                 },
                 ((SensorManager)getSystemService(Context.SENSOR_SERVICE))
                         .getSensorList(Sensor.TYPE_ACCELEROMETER).get(0), SensorManager.SENSOR_DELAY_GAME);
@@ -190,7 +192,7 @@ public class MyService extends Service {
         myNoti.build();
         Notification notification = myNoti.getNotification();
 
-        notificationManager.notify(1, notification);
+        //notificationManager.notify(1, notification);
 
 
     //    startForeground(ONGOING_NOTIFICATION_ID, notification);

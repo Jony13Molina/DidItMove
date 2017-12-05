@@ -23,15 +23,38 @@ import java.util.concurrent.ConcurrentLinkedQueue;
         public static final String LOG_TAG = "MyService";
         private boolean running;
         private Context context;
+        MyService theService;
 
 
+        //most of this are variables that were declared in order to make
+        // the service task communication
         private Set<ResultCallback> resultCallbacks = Collections.synchronizedSet(
                 new HashSet<ResultCallback>());
         private ConcurrentLinkedQueue<ServiceResult> freeResults =
                 new ConcurrentLinkedQueue<ServiceResult>();
 
 
-
+        @Override
+        public void run()
+        {
+            running = true;
+            while (running)
+            {
+                // Sleep a tiny bit.
+                try
+                {
+                Thread.sleep(1000);
+                } catch (Exception e)
+                {
+                e.getLocalizedMessage();
+            }
+            //Set Acceleration
+                Boolean answer = false;
+            // Sends it to the UI thread in MainActivity (if MainActivity
+            // is running).
+                notifyResultCallback(answer);
+        }
+    }
         //did it move function
 
         public boolean didItMove(Date T1Accel)
@@ -57,30 +80,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
             // Put here what to do at creation.
         }
 
-        @Override
-        public void run()
-        {
-            running = true;
-            Random rand = new Random();
-            while (running)
-            {
-                // Sleep a tiny bit.
-              /*  try
-                {
-                    Thread.sleep(1000);
-                } catch (Exception e)
-                {
-                    e.getLocalizedMessage();
-                }
-                // Generate a random number.
-                int r = rand.nextInt(100);
-                // Sends it to the UI thread in MainActivity (if MainActivity
-                // is running).
-                Log.i(LOG_TAG, "Sending random number: " + r);
-                notifyResultCallback(r);*/
 
-            }
-        }
 
         public void addResultCallback(ResultCallback resultCallback)
         {
@@ -135,9 +135,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
         /**
          * Call this function to return the integer i to the activity.
-         * @param i
+         * @param
          */
-        private void notifyResultCallback(int i)
+        private void notifyResultCallback(boolean answer)
         {
             if (!resultCallbacks.isEmpty())
             {
@@ -150,7 +150,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
                 // If we got a null result, we have no more space in the buffer,
                 // and we simply drop the integer, rather than sending it back.
                 if (result != null) {
-                    result.intValue = i;
+                    result.intValue = answer;
                     for (ResultCallback resultCallback : resultCallbacks) {
                         Log.i(LOG_TAG, "calling resultCallback for " + result.intValue);
                         resultCallback.onResultReady(result);
